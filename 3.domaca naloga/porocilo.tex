@@ -1,0 +1,87 @@
+% To je predloga za poročila o domačih nalogah pri predmetih, katerih
+% nosilec je Blaž Zupan. Seveda lahko tudi dodaš kakšen nov, zanimiv
+% in uporaben element, ki ga v tej predlogi (še) ni. Več o LaTeX-u izveš na
+% spletu, na primer na http://tobi.oetiker.ch/lshort/lshort.pdf.
+%
+% To predlogo lahko spremeniš v PDF dokument s pomočjo programa
+% pdflatex, ki je del standardne instalacije LaTeX programov.
+
+\documentclass[a4paper,11pt]{article}
+\usepackage{a4wide}
+\usepackage{fullpage}
+\usepackage[utf8x]{inputenc}
+\usepackage[slovene]{babel}
+\selectlanguage{slovene}
+\usepackage[toc,page]{appendix}
+\usepackage[pdftex]{graphicx} % za slike
+\usepackage{setspace}
+\usepackage{color}
+\definecolor{light-gray}{gray}{0.95}
+\usepackage{listings} % za vključevanje kode
+\usepackage{hyperref}
+\renewcommand{\baselinestretch}{1.2} % za boljšo berljivost večji razmak
+\renewcommand{\appendixpagename}{Priloge}
+
+\lstset{ % nastavitve za izpis kode, sem lahko tudi kaj dodaš/spremeniš
+language=Python,
+basicstyle=\footnotesize,
+basicstyle=\ttfamily\footnotesize\setstretch{1},
+backgroundcolor=\color{light-gray},
+}
+
+\title{3. domača naloga}
+\author{Tlen Venko (63140280)}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Uvod}
+
+Cilj tretje naloge je bil, da na podlagi podatkov o vožnjah mestnih avtobusov iz obdobja januar - november 2012, napovemo trajanje vožnje avtobusov za mesec december 2012.
+
+\section{Podatki}
+
+Podatki na katerih se je program učil se nahajajo v datoteki train.csv.gz. Podatki obsegajo podatke vožnje o 28 mestnih avtobusnih linijah v obdobju od 1.1.2012 do 30.11.2012. Datoteka zavzema podatke o registrski tablici avtobusa, IDju voznika, Stevilki proge, začetna in končna postaja, ter začetni in končni čas vožnje. Za nalogo so bile pomembni podatki številka proge, začetna in končna postaja in pa čas začetka in konca vožnje.
+
+\section{Metode}
+
+\subsection{Ocenjevanje točnosti}
+
+Ocenjevanje pravilnosti moje napovedi sem realiziral z MAE in RMSE v razredih MAE in RMSE. Razreda sprejmeta vrednosti, ki sem jih z linearno regresijo pridelal jaz in pa realne podatke enega meseca iz učne množice (učim se na enem mesecu manj in na njem izvajam teste). ZA MAE seštejem absolutne vrednosti razlik napovedi in jih delim s številom napovedi. Pri RMSE pa seštejem kvadrate razlik napovedi, jih delim s številom napovedi in vse skupaj korenim. 
+
+\subsection{Napovedni model}
+
+\begin{itemize}
+	\item[model]
+	Funkcija, ki predela podatke tako, da jih lahko sprejme linearna regresija. 			Učimo se samo na podatkih iz novembra in ločimo med sabo uro dneva in pa dan v 			tednu.
+	\item[LinearLearner]
+	Funkcijo LinearLearner sem predelal tako, da sprejema vse podatke in se nato v 			njej gradi model X, tako da kliče funkcijo model() in pa vektor y. 
+	\item[loci{\_}po{\_}mesecu]
+	Funkcija, ki loci podatke na katerih se ucimo tako, da izloči mesec november in 		se uči samo na podatkih od januarja do oktobra, november pa nam služi za interno 	testiranje.
+	\item[read{\_}file]
+	Funkcija za branje vhodnih podatkov.
+	\item[main]
+	Najprej preberemo testne podatke, nato pa zgradimo model, tako da ločimo linije 		med sabo z razredom SeparateBySetLearner, linearno regresijo pa delamo s 				LinearLearner. Rezultate nato zapišemo v datoteko. Sledi še interno preverjanje, 	kjer se učimo na podatkih od januarja do oktobra in jih preverjamo na novembru z 	metodo RMSE in MAE.
+\end{itemize}
+
+\section{Rezultati} 
+\begin{table}[ht]
+\centering
+\caption{Rezultati}
+\label{my-label}
+\begin{tabular}{llll}
+\textbf{ime metode} & \textbf{oddaja}     & \textbf{ocena s preverjanjem na učnih podatkih} & \textbf{ocena na tekmovalnem strežniku} \\
+celo\_leto          & 2016-11-29 23:47:53 & 170.8                                           & 210.77369                               \\
+${\ast}$pretekli\_mesec    & 2016-11-30 01:04:09 & 184.26                                          & 191.43976                               \\
+polinom8            & 2016-11-30 10:42:27 & 175.7                                           & 207.80280                               \\
+polinom5            & /                   & 176.84                                          & /                                      
+\end{tabular}
+\end{table}
+Rezultati za pretekli mesec so na internem testiranju izdelane na oktobru in ne na novembru, kot pri pravem testiranju.
+
+\section{Izjava o izdelavi domače naloge}
+Domačo nalogo in pripadajoče programe sem izdelal sam.
+
+\end{document}

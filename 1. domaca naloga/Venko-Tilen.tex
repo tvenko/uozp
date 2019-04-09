@@ -1,0 +1,95 @@
+% To je predloga za poročila o domačih nalogah pri predmetih, katerih
+% nosilec je Blaž Zupan. Seveda lahko tudi dodaš kakšen nov, zanimiv
+% in uporaben element, ki ga v tej predlogi (še) ni. Več o LaTeX-u izveš na
+% spletu, na primer na http://tobi.oetiker.ch/lshort/lshort.pdf.
+%
+% To predlogo lahko spremeniš v PDF dokument s pomočjo programa
+% pdflatex, ki je del standardne instalacije LaTeX programov.
+
+\documentclass[a4paper,11pt]{article}
+\usepackage{a4wide}
+\usepackage{fullpage}
+\usepackage[utf8x]{inputenc}
+\usepackage[slovene]{babel}
+\selectlanguage{slovene}
+\usepackage[toc,page]{appendix}
+\usepackage[pdftex]{graphicx} % za slike
+\usepackage{setspace}
+\usepackage{color}
+\definecolor{light-gray}{gray}{0.95}
+\usepackage{listings} % za vključevanje kode
+\usepackage{hyperref}
+\renewcommand{\baselinestretch}{1.2} % za boljšo berljivost večji razmak
+\renewcommand{\appendixpagename}{Priloge}
+
+\lstset{ % nastavitve za izpis kode, sem lahko tudi kaj dodaš/spremeniš
+language=Python,
+basicstyle=\footnotesize,
+basicstyle=\ttfamily\footnotesize\setstretch{1},
+backgroundcolor=\color{light-gray},
+}
+
+\title{Glasovanje za Pesem Evrovizije}
+\author{Tilen Venko (63140280)}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Uvod}
+
+Cilj naloge je, da s pomočjo hierarhičnega razvrščanja preverimo, ali se pri glasovanju na Evroviziji ustvarjajo kakšne skupine držav, ki si medsebojno podeljujejo točke.
+
+\section{Podatki}
+
+Podatki so predstavljeni v dveh .csv datotekah. Ena s finalnimi in druga s polfinalnimi rezultati glasovanja. Pri preiskovanju sem uporabil samo podatke iz tabele s podatki o finalu, saj menim, da so polfinalni podatki manj zanesljivi in težje jih je obdelovati. \\
+Podatki so zbrani za obdobje devetih let, od leta 1998 do leta 2009, za 46 držav. 
+
+\section{Metode}
+
+Naloge sem se lotil tako, da sem s csv.readerjem prebral podatke iz datoteke. Pobrisal nepotrebne podatke in si v slovar shranil imena držav, podatke o glasovanjih pa v transponirano tabelo. \\
+Program vsebuje štiri ključne funkcije. In sicer funkcijo \textit{column\_distance}, ki izračuna evklidsko razdaljo med dvema stolpcema in jo uteženo vrne glede na to, koliko vrednosti smo uporabili. Države imajo namreč lahko različno število ujemanj v glasovanju med sabo. \\
+Naslednja funkcija je \textit{cluster\_distance}, ki nad vsemi kombinacijami držav v gruči kliče funkcijo \textit{column\_distance} in vrne rezultat glede na parameter \textit{self.linkage}, ki je lahko \textit{complete, average ali single}.\\
+Funkcija \textit{closest\_clusters} nad vsemi kombinacijami gruč kličemo funkcijo \textit{cluster\_distance} in vrnemo minimalni gruči.\\
+Nato pa v funkciji \textit{run} v tabeli gruč združimo dve najbližji gruči. To počnemo tako dolgo, dokler nismo zadovoljni s številom gruč, ki nam jih program vrne (običajno 3). Te gruče na koncu še izpišemo.
+\section{Rezultati}
+
+rezultati ki nam mi jih vrne program za tri gruče so sledeči:
+
+\begin{table}[]
+\centering
+\caption{Rezultati grupiranja}
+\label{my-label}
+\begin{tabular}{lll}\\\\
+\textbf{1. skupina} & \textbf{2. skupina} & \textbf{3. skupina}    \\
+Andorra             & Croatia             & Monaco                 \\
+Portugal            & Montenegro          & Austria                \\
+Spain               & Serbia              & Switzerland            \\
+Romania             & Slovenia            & France                 \\
+San Marino          & Malta               & Germany                \\
+Bulgaria            & Ireland             & Belgium                \\
+Cyprus              & United Kingdom      & Netherlands            \\
+Greece              & Finland             & Albania                \\
+Moldova             & Iceland             & Bosnia and Herzegovina \\
+Czech Republic      & Sweden              & Macedonia              \\
+Israel              & Denmark             & Serbia \& Montenegro   \\
+Armenia             & Norway              &                        \\
+Georgia             & Slovakia            &                        \\
+Poland              & Estonia             &                        \\
+Ukraine             & Latvia              &                        \\
+Belarus             & Lithuania           &                        \\
+Russia              &                     &                        \\
+Turkey              &                     &                        \\
+Azerbaijan          &                     &                        \\
+Hungary             &                     &                       
+\end{tabular}
+\end{table}
+
+\textit{Podatki niso v hierarhičnem drevesu, saj le-tega nisem znal naredit in sem podal samo države, ki so pogrupirane.}
+
+\section{Izjava o izdelavi domače naloge}
+Domačo nalogo in pripadajoče programe sem izdelal sam.
+
+
+\end{document}

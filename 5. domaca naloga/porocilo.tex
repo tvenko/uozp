@@ -1,0 +1,70 @@
+% To je predloga za poročila o domačih nalogah pri predmetih, katerih
+% nosilec je Blaž Zupan. Seveda lahko tudi dodaš kakšen nov, zanimiv
+% in uporaben element, ki ga v tej predlogi (še) ni. Več o LaTeX-u izveš na
+% spletu, na primer na http://tobi.oetiker.ch/lshort/lshort.pdf.
+%
+% To predlogo lahko spremeniš v PDF dokument s pomočjo programa
+% pdflatex, ki je del standardne instalacije LaTeX programov.
+
+\documentclass[a4paper,11pt]{article}
+\usepackage{a4wide}
+\usepackage{fullpage}
+\usepackage[utf8x]{inputenc}
+\usepackage[slovene]{babel}
+\selectlanguage{slovene}
+\usepackage[toc,page]{appendix}
+\usepackage[pdftex]{graphicx} % za slike
+\usepackage{setspace}
+\usepackage{color}
+\definecolor{light-gray}{gray}{0.95}
+\usepackage{listings} % za vključevanje kode
+\usepackage{hyperref}
+\renewcommand{\baselinestretch}{1.2} % za boljšo berljivost večji razmak
+\renewcommand{\appendixpagename}{Priloge}
+
+\lstset{ % nastavitve za izpis kode, sem lahko tudi kaj dodaš/spremeniš
+language=Python,
+basicstyle=\footnotesize,
+basicstyle=\ttfamily\footnotesize\setstretch{1},
+backgroundcolor=\color{light-gray},
+}
+
+\title{Priporočilni sistemi}
+\author{Tilen Venko (63140280)}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Uvod}
+
+Cilj naloge je bil, da implementiramo tri metode za priporočilne sisteme. In sicer preprost priporočilni sistem, tak, ki meri podobnost s kosinusno raydaljo in priporočilni sistem, ki temelji na latentnem modelu.
+
+\section{Podatki}
+
+Podatke smo dobili že pripravljene, razdeljene na učno in testno množico iz spletne strani Movielens 100k. Učna množica zavzema 943 uporabnikov in 1662 različnih filmov.
+
+\section{Metode}
+
+\subsection{Preprost priporočilni sistem}
+
+Ta metoda deluje tako, da izračunamo povprečne ocene vseh filmov, kar sem storil v metodi $average\_movie()$ in povprečje vseh ocen uporabnikov, da ugotovimo kako strog ocenjevalec je uporabnik. To sem implementiral v funkciji $average\_user()$. Nato pa iteriramo čez vse filme in uporabnike ter dopolnjujemo ocene za tiste filme, katerim uporabnik ni dal ocene, po formuli ($povprečje\_uporabnik$ + $povprečje\_film$) / 2, kar sem implementiral v funkciji $user\_missing()$.
+
+\subsection{Priporočilni sistem, ki temelji na podobnosti med filmi}
+
+Ta nači deluje tako, da za vsak film, kateremu uporabnik ni podal ocene, vzamemo njegov vektor vseh ocen in izračunamo kosinusne razdalje med vektorjem ocen tega filma in ocenami vseh ostalih filmov, ki jih je ta uporabnik ocenil, uteženo z oceno uporabnika, na koncu pa seštevek uteženih raydalj delimo s seštevkom neuteženih razdalj. V funkciji cos() sem implementiral izračun kosinusne razdalje, v funkciji $user\_missing()$ pa vso ostalo logiko, da se kosinusne razdalje izračunajo za vse uporabnike in vse filme, katerim niso podali ocene. 
+
+\subsection{Priporočilni sistem, ki temelji na latentnem modelu}
+
+Pri tej metodi si najprej zgeneriramo dve matriki P in Q, ki imata naključne vrednosti med -0.01 in 0.01. P je dimenzij [št. uporabnikov][k], Q pa [k][št. filmov], k si določimo samo privzeto je 1. Naš cilj je da bi lahko s množenjem P in Q matrike določili oceno katerega koli filma v matriki tipa [št. uporabnikov][št. filmov]. to dosežemo tako da izračunamo ciljno funkcijo $e_{ui}$, nato pa P in Q matriko popravimo glede na gradientni spust parcialnega odvoda $e_{ui}$.
+
+\section{Rezultati}
+
+S preprostim priporočilnim sistemom dobim rmse enak 0.1295. Za priporočilne sisteme s podobnostmi med filmi nisem uspel izračunat rmseja, saj se je program izvajal predolgo časa. Priporočilni sistem na podlagi latentnega modela nam da pri k=1 rmse 0.01007, za k=2 0.00993, k=5 0.00987 in za k=10 je rmse enak 0.00987. S tem lahko vidimi, da stopnja razcepa sicer vpliva na rezultate vendar ne drastično in da se od stopnje k=5 praktično ne pozna več, saj ni sprememb na petih decimalkah. Naša želja pa je tudi čim manjši k, saj je tako računski čas manjši.
+
+\section{Izjava o izdelavi domače naloge}
+Domačo nalogo in pripadajoče programe sem izdelal sam.
+
+
+\end{document}
